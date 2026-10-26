@@ -1,9 +1,18 @@
 package br.com.carstore.model;
 
 public class Car {
+    private String id;
     private String nome;
-    private String color;
-    private String model;
+
+    public Car(String nome){
+        this.nome = nome;
+    }
+
+    public Car(String id, String nome){
+        this.id = id;
+        this.nome = nome;
+    }
+
 
     public String getNome() {
         return nome;
@@ -13,19 +22,12 @@ public class Car {
         this.nome = nome;
     }
 
-    public String getColor() {
-        return color;
+    public String getId() {
+        return id;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
 }

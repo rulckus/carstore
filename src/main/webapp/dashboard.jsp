@@ -6,20 +6,39 @@
     <title>Dashboard</title>
 </head>
 <body>
-<div>
+  <div>
+
+    <c:if test="${sessionScope.loggedUser != null}">
+        <span>${sessionScope.loggedUser}</span>
+        <a href="/logout">Logout</a>
+    </c:if>
+
     <h1>Cars</h1>
     <table>
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <c:if test="${sessionScope.loggedUser != null}">
+                <th>Actions</th>
+            </c:if>
         </tr>
         <c:forEach var="car" items="${cars}">
             <tr>
-                <td></td>
+                <td>${car.id}</td>
                 <td>${car.nome}</td>
+                <td>
+                    <c:if test="${sessionScope.loggedUser != null}">
+                        <form action="/delete-car" method="post">
+                            <input type="hidden" id="id" name="id" value="${car.id}">
+                            <button type="submit">Delete</button>
+                            <span> | </span>
+                            <a href="index.jsp?id=${car.id}&name=${car.nome}">Update</a>
+                        </form>
+                    </c:if>
+                </td>
             </tr>
         </c:forEach>
     </table>
-</div>
+  </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package br.com.carstore.dao;
 
 import br.com.carstore.model.Car;
+import br.com.carstore.servlet.config.ConnectionPoolConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,9 +15,7 @@ public class CarDAO {
         String SQL = "INSERT INTO  CAR (NAME) VALUES(?)";
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "sa");
-
-            System.out.println("Sucasso ao conectar no banco de dados");
+            Connection connection = ConnectionPoolConfig.getConnection();
 
             PreparedStatement preparedStatement = connection.prepareStatement(SQL);
 
@@ -37,11 +36,9 @@ public class CarDAO {
         String SQL = "SELECT * FROM CAR";
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "sa");
+            Connection connection = ConnectionPoolConfig.getConnection();
 
             PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-
-            System.out.println("Sucesso ao conectar no DB");
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -49,9 +46,11 @@ public class CarDAO {
 
             while (resultSet.next()){
 
-                Car car = new Car();
-                String name = resultSet.getString("name");
-                car.setNome(name);
+                String carId = resultSet.getString("id");
+                String carName = resultSet.getString("name");
+
+                Car car = new Car(carId, carName);
+
                 cars.add(car);
 
             }
@@ -65,5 +64,54 @@ public class CarDAO {
         }
 
         return Collections.emptyList();
+    }
+
+    public void deleteCarById(String carId){
+        String SQL = "DELETE CAR WHERE ID = ?";
+
+        try {
+
+            Connection connection = ConnectionPoolConfig.getConnection();
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, carId);
+            preparedStatement.execute();
+
+            System.out.println("success on delete car with id: " + carId);
+
+            connection.close();
+
+        } catch (Exception e) {
+
+            System.out.println("fail in database connection");
+
+        }
+    }
+
+    public void updateCar(Car car) {
+
+        String SQL = "UPDATE CAR SET NAME = ? WHERE ID = ?";
+
+        try {
+
+            Connection connection = ConnectionPoolConfig.getConnection();
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+
+            preparedStatement.setString(1, car.getNome());
+            preparedStatement.setString(2, car.getId());
+            preparedStatement.execute();
+
+            System.out.println("success in update car");
+
+            connection.close();
+
+        } catch (Exception e) {
+
+            System.out.println("fail in database connection");
+            System.out.println("Error: " + e.getMessage());
+
+        }
+
     }
 }

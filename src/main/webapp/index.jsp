@@ -8,7 +8,8 @@
 <form action="/create-car" method="post">
 
     <label>Car Name</label>
-    <input type="text" name="name" id="name">
+    <input type="text" name="name" id="name" value="${param.name}">
+    <input type="hidden" id="id" name="id" value="${param.id}">
 
     <button type="submit">Register</button>
 
